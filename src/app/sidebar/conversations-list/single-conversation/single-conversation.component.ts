@@ -16,7 +16,7 @@ export class SingleConversationComponent implements OnInit {
   constructor(private conversationService: ConversationsService) { }
 
   ngOnInit() {
-    if (this.conversation.messages !== null) {
+    if (this.conversation.messages.length > 0) {
       this.lastMessage = this.conversation.messages[this.conversation.messages.length - 1];
     }
   }

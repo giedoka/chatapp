@@ -19,9 +19,8 @@ export class MessageInputComponent implements OnInit {
     }
 
     onMessageSent() {
-        const date = new Date(),
-            day = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`,
-            time = `${date.getHours()}:${date.getMinutes()}`;
+        const date = new Date();
+        console.log(date);
         for (const key in this.conversationsService.conversations) {
             if (this.conversationsService.conversations.hasOwnProperty(key)) {
                 if (this.conversationsService.conversations[key]['id'] === this.activeConversation.id) {
@@ -31,8 +30,7 @@ export class MessageInputComponent implements OnInit {
                         authorName: 'User',
                         authorId: 1,
                         content: this.newMessage,
-                        day: day,
-                        time: time,
+                        date: date,
                         read: false
                     });
                 }

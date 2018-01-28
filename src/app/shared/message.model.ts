@@ -3,15 +3,13 @@ export class Message {
                 public authorName: string,
                 public authorId: number,
                 public content: string,
-                public day,
-                public time: string,
+                public date: Date,
                 public read: boolean) {
         this.id = id;
         this.authorName = authorName;
         this.authorId = authorId;
         this.content = content;
-        this.day = day;
-        this.time = time;
+        this.date = date;
         this.read = read;
     }
 }
