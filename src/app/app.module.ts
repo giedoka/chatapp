@@ -1,5 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 
 import { AppComponent } from './app.component';
@@ -9,9 +11,8 @@ import { ConversationsListComponent } from './sidebar/conversations-list/convers
 import { SingleConversationComponent } from './sidebar/conversations-list/single-conversation/single-conversation.component';
 import { MessageInputComponent } from './conversation-window/message-input/message-input.component';
 import { ActiveConversationComponent } from './conversation-window/active-conversation/active-conversation.component';
-import { FormsModule } from '@angular/forms';
 import { ConversationsService } from './shared/conversations.service';
-import { RouterModule } from '@angular/router';
+import { UsersService } from './shared/users.service';
 
 const ROUTES = [
   {
@@ -35,7 +36,7 @@ const ROUTES = [
     FormsModule,
     RouterModule.forRoot(ROUTES)
   ],
-  providers: [ConversationsService],
+  providers: [ConversationsService, UsersService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

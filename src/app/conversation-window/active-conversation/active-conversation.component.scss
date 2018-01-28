@@ -1,5 +1,44 @@
+@import '../../../sass/variables';
 @import '../../../sass/utilities/module';
+@import '../../../sass/bootstrap/helpers/mixins/module';
 
+.conversation-name {
+  padding: rem-calc(15);
+  background-color: $color-white;
+  box-shadow: 0 -1px 0 0 $color-gray-light;
+  h2 {
+    margin: 0;
+    font-size: rem-calc(24);
+    font-weight: normal;
+  }
+}
 .messages-list {
   @extend .clear-list;
+  height: 100%;
+  overflow-y: auto;
+  li {
+    color: $color-white;
+    margin: 5px 0;
+    .message-content {
+      padding: rem-calc(4) rem-calc(7);
+      border-radius: 3px;
+      display: inline-block;
+      max-width: 70%;
+      @include breakpoint(md up) {
+        max-width: 45%;
+      }
+    }
+    &.receiver {
+      .message-content {
+        background-color: $color-green;
+      }
+    }
+    &.sender {
+      text-align: right;
+      .message-content {
+        background-color: $color-gray-dark;
+        text-align: left;
+      }
+    }
+  }
 }

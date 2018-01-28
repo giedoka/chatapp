@@ -1,5 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Conversation } from '../../shared/conversation.model';
+import { User } from '../../shared/user.model';
+import { UsersService } from '../../shared/users.service';
 
 @Component({
     selector: 'app-active-conversation',
@@ -9,10 +11,13 @@ import { Conversation } from '../../shared/conversation.model';
 export class ActiveConversationComponent implements OnInit {
 
     @Input() activeConversation: Conversation;
+    // @Input() loggedUser: User;
+    loggedUserId: number;
 
-    constructor() { }
+    constructor(private usersService: UsersService) { }
 
     ngOnInit() {
+        this.loggedUserId = this.usersService.loggedUser.id;
     }
 
 }

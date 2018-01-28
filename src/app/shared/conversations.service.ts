@@ -1,11 +1,14 @@
-import { EventEmitter } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Conversation } from './conversation.model';
+import { UsersService } from './users.service';
 
+@Injectable()
 export class ConversationsService {
   conversations: Conversation[];
+  userConversations: Conversation[];
   selectedConversation = new EventEmitter<Conversation>();
 
-  constructor() {
+  constructor(private usersService: UsersService) {
     this.conversations = [
         {
           id: 1,
@@ -24,19 +27,28 @@ export class ConversationsService {
           messages: [
             {
               id: 1,
-              authorName: 'Kaszel',
+              authorName: 'Piotr Uzarski',
               authorId: 1,
-              content: 'Siema',
+              content: 'Siemano!',
               date: new Date('January 28, 2018 13:24:30'),
               read: true
             },
             {
               id: 2,
-              authorName: 'Kosa w plecy?',
+              authorName: 'Marcin Czerwiński',
               authorId: 2,
-              content: 'No elo',
+              content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum mauris lectus, in iaculis lectus aliquam ut. Vestibulum justo risus, bibendum sit amet tortor ut, hendrerit viverra velit. Nulla neque tellus, porta ut ex a, accumsan laoreet purus. Sed sollicitudin leo sem, id tincidunt justo interdum sed.',
               date: new Date('January 28, 2018 13:25:00'),
-              read: false}
+              read: false
+            },
+            {
+              id: 3,
+              authorName: 'Łukasz Witkowski',
+              authorId: 3,
+              content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum mauris lectus, in iaculis lectus aliquam ut. Vestibulum justo risus, bibendum sit amet tortor ut, hendrerit viverra velit. Nulla neque tellus, porta ut ex a, accumsan laoreet purus. Sed sollicitudin leo sem, id tincidunt justo interdum sed. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec bibendum mauris lectus, in iaculis lectus aliquam ut. Vestibulum justo risus, bibendum sit amet tortor ut, hendrerit viverra velit. Nulla neque tellus, porta ut ex a, accumsan laoreet purus. Sed sollicitudin leo sem, id tincidunt justo interdum sed.',
+              date: new Date('January 28, 2018 13:25:20'),
+              read: false
+            }
           ],
         },
         {
@@ -56,5 +68,20 @@ export class ConversationsService {
           messages: [],
         }
     ];
+  }
+
+  sortByDate() {
+    for (let i = 0; i < this.usersService.loggedUser.conversationsIds.length; i++) {
+      for (const key in this.conversations) {
+        if (this.conversations.hasOwnProperty(key)) {
+          if (this.conversations[key]['id'] === this.usersService.loggedUser.conversationsIds[i]) {
+            this.userConversations.push(this.conversations[key]);
+          }
+        }
+      }
+    }
+    this.userConversations.sort(function(a, b) {
+       return new Date(a.messages[a.messages.length - 1].date) - new Date(a.messages[b.messages.length - 1].date);
+    });
   }
 }

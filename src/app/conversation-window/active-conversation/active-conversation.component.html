@@ -1,5 +1,12 @@
-<div class="sm-12 columns">
-  <ul class="messages-list" *ngIf="activeConversation && activeConversation.messages.length > 0">
-    <li *ngFor="let message of activeConversation.messages">{{ message.content }}</li>
+<div class="sm-12 columns" *ngIf="activeConversation">
+  <div class="row conversation-name">
+    <div class="sm-12 columns">
+      <h2>{{ activeConversation.name }}</h2>
+    </div>
+  </div>
+  <ul class="messages-list" *ngIf="activeConversation.messages.length > 0">
+    <li *ngFor="let message of activeConversation.messages" [ngClass]="{'sender':loggedUserId === message.authorId, 'receiver':loggedUserId !== message.authorId}">
+      <div class="message-content">{{ message.content }}</div>
+    </li>
   </ul>
 </div>
