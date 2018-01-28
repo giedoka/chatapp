@@ -1,0 +1,10 @@
+<form action="" class="form-inline">
+  <div class="input-group">
+    <fieldset class="form-control-input-wrapper">
+      <div class="fieldset-content">
+        <input type="text" name="new_message" placeholder="Napisz wiadomość" class="form-control" [(ngModel)]="newMessage" >
+      </div>
+    </fieldset>
+    <button type="button" class="btn btn-blue btn-without-shadow" (click)="onMessageSent()">Wyślij</button>
+  </div>
+</form>

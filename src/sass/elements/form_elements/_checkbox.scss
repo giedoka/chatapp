@@ -1,0 +1,62 @@
+//checkboxes
+$checkbox-size: 16px;
+$checkbox-font-size: 6px;
+$checkbox-line-height: $checkbox-size;
+$checkbox-background: $color-white;
+$checkbox-disabled-background: $color-gray-lighter;
+$checkbox-border-radius: 3px;
+$checkbox-border: 1px solid #D7D7D7;
+
+@mixin form-checkbox {
+    input[type="checkbox"] {
+        display: none;
+    }
+    input[type="checkbox"] + label{
+        font-size: rem-calc(14);
+        display: flex;
+        line-height: rem-calc(18);
+        align-items: center;
+        
+        &[disabled] {
+            background: $checkbox-disabled-background;
+        }
+    }
+    input[type="checkbox"] + label:before {
+        content: '';
+        display: inline-block;
+        width: $checkbox-size;
+        min-width: $checkbox-size;
+        height: $checkbox-size;
+        overflow: hidden;
+
+        font-family: 'shoplo';
+        background-color: transparent;
+        border: $checkbox-border;
+        background: $checkbox-background;
+        border-radius: $checkbox-border-radius;
+        color: #fff;
+        text-align: center;
+        cursor: pointer;
+        content: '\e932';
+        font-size: $checkbox-font-size;
+        line-height: ($checkbox-line-height - 2px);
+        @include transition(0.2s ease-in-out);
+        vertical-align: top;
+        margin-right: 10px;
+    }
+    input[type="checkbox"]:checked + label:before {
+        background: $color-white;
+        border-color: $color-purple;
+        color: $color-purple;
+    }
+
+    input[type="checkbox"][disabled] + label:before,
+    input[type="checkbox"][disabled]:checked + label:before{
+        background: $checkbox-disabled-background;
+        border-color: #D7D7D7;
+        color: #D7D7D7;
+    }
+    input[type="checkbox"][disabled] + label:before {
+        color: $color-gray-lighter;
+    }
+}

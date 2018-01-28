@@ -1,0 +1,30 @@
+// Buttons
+$btn-font-weight: bold;
+$btn-font-size: $font-size-xxx-small;
+$btn-font-size-large: $font-size-small;
+$btn-vertical-padding: 0px;
+$btn-vertical-padding-large: rem-calc(10);
+$btn-vertical-padding-small: 0px;
+$btn-horizontal-padding: rem-calc(20);
+$btn-horizontal-padding-large: rem-calc(50);
+$btn-horizontal-padding-small: 8px;
+$btn-border-radius: 30px;
+$btn-border-radius-large: 30px;
+$btn-line-height: 28px;
+$btn-icon-size: $font-size-small;
+$btn-small-icon-size: $font-size-small;
+$btn-small-icon-space: 2px;
+
+
+$btn-disabled-color: #d7d7d7;
+$btn-disabled-background-color: #f7f7f7;
+$btn-disabled-border-color: #d7d7d7;
+
+$btn-white-shadow: 0  6px 13px 0 rgba(#000, .05);
+$btn-white-hover-shadow: 0  6px 20px 0 rgba(#000, .05);
+
+$btn-purple-shadow: 0  0 10px 0 rgba($color-purple, 1);
+$btn-purple-hover-shadow: 0  0 10px 0 rgba($color-purple-dark-one, 1);
+
+$btn-red-shadow: 0  0 10px 0 rgba($color-red, 1);
+$btn-red-hover-shadow: 0  0 10px 0 rgba($color-red-dark, 1);

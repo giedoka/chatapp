@@ -1,0 +1,20 @@
+.social-share{
+
+  .social-button{
+    width: rem-calc(50);
+    height: rem-calc(50);
+    line-height: rem-calc(50);
+    text-align: center;
+    border: 1px solid $color-gray-lightest;
+    border-radius: 50%;
+    font-size: rem-calc(18);
+    display: inline-block;
+
+    .icon-facebook{
+      color: #3B5998;
+    }
+    .icon-twitter{
+      color: #4099FF;
+    }
+  }
+}

@@ -1,0 +1,26 @@
+$dropdown-min-width:             10rem !default;
+$dropdown-padding-y:             .5rem !default;
+$dropdown-margin-top:            0 !default;
+$dropdown-bg:                    $color-white !default;
+$dropdown-border-color:         rgba($color-silver-darker, .05) !default;
+$dropdown-border-width:          1px !default;
+$dropdown-divider-bg:            $color-gray-lighter !default;
+$dropdown-box-shadow:            0 -10px 22px rgba(#3B4249,.1) !default;
+$dropdown-up-box-shadow:         0 10px 22px rgba(#3B4249,.1) !default;
+
+$dropdown-link-color:            $color-gray-dark !default;
+$dropdown-link-hover-color:      darken($color-gray-dark, 5%) !default;
+$dropdown-link-hover-bg:         $color-gray-lightest !default;
+
+$dropdown-link-active-color:     $color-white !default;
+$dropdown-link-active-bg:        $color-gray-lightest !default;
+
+$dropdown-link-disabled-color:   $color-gray-light !default;
+
+$dropdown-item-padding-x:        1.5rem !default;
+
+$dropdown-header-color:          $color-gray-light !default;
+
+$zindex-dropdown-backdrop:  990 !default;
+$zindex-navbar:             1000 !default;
+$zindex-dropdown:           1000 !default;

@@ -1,0 +1,8 @@
+<div class="conversations-list sm-12">
+  <h3 class="sm-12 columns">Users</h3>
+  <ul>
+    <li *ngFor="let conversation of conversations" class="sm-12 columns">
+      <app-single-conversation [conversation]="conversation"></app-single-conversation>
+    </li>
+  </ul>
+</div>

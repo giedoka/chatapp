@@ -1,0 +1,5 @@
+<div class="sm-12 columns">
+  <ul class="messages-list" *ngIf="activeConversation">
+    <li *ngFor="let message of activeConversation.messages">{{ message.content }}</li>
+  </ul>
+</div>

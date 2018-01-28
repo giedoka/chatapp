@@ -1,0 +1,19 @@
+.btn-group {
+    font-size: 0;
+    > .btn {
+        margin-right: 20px;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
+
+.btn-group-small {
+    font-size: 0;
+    > .btn {
+        margin-right: 10px;
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}

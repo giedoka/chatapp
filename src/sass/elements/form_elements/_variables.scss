@@ -1,0 +1,18 @@
+$form-spacing: rem-calc(20);
+
+//inputs
+$input-radius: 1.5625rem;
+$input-font-size: $font-size-small;
+$input-caret-color: $color-purple;
+$input-color: $color-black;
+$input-disable-color: $color-silver;
+$input-placeholder-color: $color-gray;
+$input-background: $color-white !default;
+$input-background-focus: $color-white;
+$input-background-disabled: $color-gray-lightest;
+$input-border: 1px solid $color-gray-light;
+$input-border-focus: 1px solid $color-purple;
+$input-border-disabled: 1px solid $color-gray-light;
+$input-cursor-disabled: not-allowed !default;
+$input-transition: box-shadow 0.5s, border-color 0.25s ease-in-out !default;
+$input-number-spinners: true;

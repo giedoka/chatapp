@@ -1,0 +1,90 @@
+@mixin link-variant($color ,$hover-color:$color, $hover-arrow:false) {
+    color: $color;
+    @include transition(color, 0.35s, easy);
+    @if $hover-arrow == true {
+        position: relative;
+        // &:after {
+        //    @extend .icon;
+        //    content: "\e900";
+        //    display: inline-block;
+        //    font-size: rem-calc(11);
+        //    opacity: 0;
+        //    visibility: hidden;
+        //    // margin-right: 5px;
+        //    @include transition(0.2s, easy-in);
+        //    position: absolute;
+        //    top: 50%;
+        //    transform: translateY(-50%);
+        //    right: 0;
+        //}
+    }
+    &:hover{
+        color: $hover-color;
+        @if $hover-arrow == true {
+            &:after {
+                margin-right: -20px;
+                opacity: 1;
+                visibility: visible;
+                color: $color-purple;
+            }
+        }
+    }
+}
+
+.link-with-button-icon {
+    display: flex;
+    align-items: center;
+    color: $color-black;
+    font-size: $font-size-xxx-small;
+    @include link-variant($color-black, $color-purple, false);
+    &:hover{
+        .btn-content {
+            span:last-child {
+                &:after {
+                    margin-right: -20px;
+                    opacity: 1;
+                    visibility: visible;
+                    color: $color-purple;
+                }
+            }
+        }
+    }
+    .btn-content {
+        line-height: rem-calc(15);
+        margin-bottom: 0;
+        margin-left: rem-calc(10);
+        span{
+            &:first-child {
+                text-transform: uppercase;
+                font-weight: 600;
+                display: block;
+                line-height: 0.9375rem;
+                margin-bottom: rem-calc(4);
+            }
+
+            &:last-child {
+                position: relative;
+                line-height: 0.75rem;
+                /*&:after {
+                    @extend .icon;
+                    content: "\e900";
+                    display: inline-block;
+                    font-size: rem-calc(11);
+                    opacity: 0;
+                    visibility: hidden;
+                    // margin-right: 5px;
+                    @include transition(0.2s, easy-in);
+                    position: absolute;
+                    right: 0;
+                    top: 100%;
+                    transform: translateY(-100%);
+                }*/
+            }
+        }
+    }
+    i {
+       &.icon-puzzle-c {
+           font-size: rem-calc(30);
+       }
+    }
+}

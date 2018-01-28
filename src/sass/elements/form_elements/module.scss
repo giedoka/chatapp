@@ -1,0 +1,18 @@
+@import 'variables';
+// @import 'input-groups';
+@import 'input';
+@import 'checkbox';
+// @import 'radio';
+// @import 'switch';
+// @import 'controls';
+// @import 'error';
+
+@mixin forms {
+  @include form-text;
+  @include form-checkbox;
+//   @include form-radio;
+//   @include form-switch;
+
+}
+
+@include forms();

@@ -1,0 +1,5 @@
+@import '../../../sass/utilities/module';
+
+.messages-list {
+  @extend .clear-list;
+}

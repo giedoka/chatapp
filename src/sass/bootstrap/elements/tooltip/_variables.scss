@@ -1,0 +1,23 @@
+$zindex-tooltip:            1070 !default;
+
+$tooltip-max-width:           200px !default;
+$tooltip-color:               $color-white !default;
+$tooltip-bg:                  $color-black !default;
+$tooltip-opacity:             .9 !default;
+$tooltip-padding-y:           3px !default;
+$tooltip-padding-x:           8px !default;
+$tooltip-margin:              3px !default;
+
+$tooltip-arrow-width:         5px !default;
+$tooltip-arrow-color:         $tooltip-bg !default;
+
+
+$tooltip-space-around: rem-calc(8);
+$tooltip-space-vertical: rem-calc(7);
+$tooltip-space-horizontal: rem-calc(8);
+$tooltip-space-vertical-without-icon: rem-calc(9);
+$tooltip-space-horizontal-without-icon: rem-calc(8);
+$tooltip-font-size: rem-calc(12);
+$tooltip-max-width-inner: rem-calc(400);
+$tooltip-icon-size: rem-calc(16);
+$tooltip-icon-space-horizontal: rem-calc(5);
