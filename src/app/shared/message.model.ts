@@ -1,15 +1,12 @@
 export class Message {
-    constructor(public id: number,
-                public authorName: string,
-                public authorId: number,
+    constructor(
+                public authorId: string,
                 public content: string,
                 public date: Date,
-                public read: boolean) {
-        this.id = id;
-        this.authorName = authorName;
+                public status: string) {
         this.authorId = authorId;
         this.content = content;
         this.date = date;
-        this.read = read;
+        this.status = status;
     }
 }

@@ -2,6 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Conversation } from '../../shared/conversation.model';
 import { ConversationsService } from '../../shared/conversations.service';
 import { UsersService } from '../../shared/users.service';
+import { User } from '../../shared/user.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-message-input',
@@ -10,36 +12,43 @@ import { UsersService } from '../../shared/users.service';
 })
 export class MessageInputComponent implements OnInit {
 
-    @Input() activeConversation: Conversation;
+    activeConversation: Conversation;
     newMessage: string;
+    loggedUser: User;
 
     constructor(
         private conversationsService: ConversationsService,
-        private usersService: UsersService
+        private usersService: UsersService,
+        private route: ActivatedRoute
     ) {
     }
 
     ngOnInit() {
+        this.loggedUser = this.usersService.loggedUser;
+        const id = this.route.snapshot.params['id'];
+        console.log(this.route);
+        this.conversationsService.getSingleConversation(id).subscribe(
+            (conversation) => {
+                this.activeConversation = conversation;
+            }
+        );
     }
 
     onMessageSent() {
         const date = new Date();
-        for (const key in this.conversationsService.conversations) {
-            if (this.conversationsService.conversations.hasOwnProperty(key)) {
-                if (this.conversationsService.conversations[key]['id'] === this.activeConversation.id) {
-                    console.log(this.conversationsService.conversations[key]);
-                    this.conversationsService.conversations[key].messages.push({
-                        id: 99,
-                        authorName: this.usersService.loggedUser.name,
-                        authorId: this.usersService.loggedUser.id,
-                        content: this.newMessage,
-                        date: date,
-                        read: false
-                    });
-                }
+        const id = this.route.snapshot.params['id'];
+        this.conversationsService.getSingleConversation(id).subscribe(
+            (conversation) => {
+                this.activeConversation = conversation;
+                this.activeConversation.messages.push({
+                    authorId: this.usersService.loggedUser.id,
+                    content: this.newMessage,
+                    date: date,
+                    status: 'read',
+                });
+                this.newMessage = '';
             }
-        }
-        this.newMessage = '';
+        );
     }
 
 }

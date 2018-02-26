@@ -10,7 +10,7 @@ import { UsersService } from './shared/users.service';
 })
 export class AppComponent implements OnInit {
 
-  selectedConversation: Conversation;
+
 
   constructor(
       private conversationsService: ConversationsService,
@@ -18,11 +18,6 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.conversationsService.selectedConversation.subscribe(
-        (conversation: Conversation) => {
-          this.selectedConversation = conversation;
-        }
-    );
-    this.conversationsService.sortByDate();
+    this.usersService.getUsers();
   }
 }

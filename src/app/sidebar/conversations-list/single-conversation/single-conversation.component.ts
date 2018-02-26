@@ -13,7 +13,7 @@ export class SingleConversationComponent implements OnInit {
   @Input() conversation: Conversation;
   lastMessage: Message = null;
 
-  constructor(private conversationService: ConversationsService) { }
+  constructor(private conversationsService: ConversationsService) { }
 
   ngOnInit() {
     if (this.conversation.messages.length > 0) {
@@ -21,9 +21,10 @@ export class SingleConversationComponent implements OnInit {
     }
   }
 
-  onSelectConversation() {
-    console.log(this.conversation);
-    this.conversationService.selectedConversation.emit(this.conversation);
-  }
+  // onSelectConversation(id) {
+  //   console.log(this.conversation);
+  //   // this.conversationsService.getSingleConversation(id).subscribe();
+  //   this.conversationsService.selectedConversation.emit(this.conversation);
+  // }
 
 }

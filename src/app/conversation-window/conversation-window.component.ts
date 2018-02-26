@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Conversation } from '../shared/conversation.model';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-conversation-window',
@@ -7,12 +6,8 @@ import { Conversation } from '../shared/conversation.model';
   styleUrls: ['./conversation-window.component.scss']
 })
 export class ConversationWindowComponent implements OnInit {
-
-  @Input() conversation: Conversation;
-
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
 }

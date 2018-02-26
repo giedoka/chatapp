@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UsersService } from '../../shared/users.service';
 import { ConversationsService } from '../../shared/conversations.service';
 
 @Component({
@@ -13,7 +14,6 @@ export class ConversationsListComponent implements OnInit {
   constructor(private conversationsService: ConversationsService) { }
 
   ngOnInit() {
-    this.conversations = this.conversationsService.conversations;
+    this.conversationsService.getConversations().subscribe(conversations => this.conversations = conversations);
   }
-
 }

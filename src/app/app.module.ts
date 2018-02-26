@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-
+import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { ConversationWindowComponent } from './conversation-window/conversation-window.component';
@@ -14,11 +14,22 @@ import { ActiveConversationComponent } from './conversation-window/active-conver
 import { ConversationsService } from './shared/conversations.service';
 import { UsersService } from './shared/users.service';
 
-const ROUTES = [
+const appRoutes = [
   {
     path: '',
-    component: AppComponent
-  }
+    redirectTo: '/conversations',
+    pathMatch: 'full'
+  },
+  {
+    path: 'conversations',
+    component: ConversationWindowComponent,
+    children: [
+        {
+            path: ':id',
+            component: ActiveConversationComponent
+        }
+    ]
+  },
 ];
 
 @NgModule({
@@ -34,7 +45,8 @@ const ROUTES = [
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule.forRoot(ROUTES)
+    HttpModule,
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [ConversationsService, UsersService],
   bootstrap: [AppComponent]

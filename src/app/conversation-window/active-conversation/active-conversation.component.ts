@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Conversation } from '../../shared/conversation.model';
+import { ActivatedRoute, Params } from '@angular/router';
+import { ConversationsService } from '../../shared/conversations.service';
 import { User } from '../../shared/user.model';
 import { UsersService } from '../../shared/users.service';
 
@@ -10,14 +12,39 @@ import { UsersService } from '../../shared/users.service';
 })
 export class ActiveConversationComponent implements OnInit {
 
-    @Input() activeConversation: Conversation;
-    // @Input() loggedUser: User;
-    loggedUserId: number;
+    activeConversation: Conversation;
+    conversationUsers: User[] = [];
+    loggedUserId: string;
 
-    constructor(private usersService: UsersService) { }
+    constructor(private conversationsService: ConversationsService, private route: ActivatedRoute, private usersService: UsersService) { }
 
     ngOnInit() {
+        const id = this.route.snapshot.params['id'];
         this.loggedUserId = this.usersService.loggedUser.id;
+        this.conversationsService.getSingleConversation(id).subscribe(
+            (conversation) => {
+                this.activeConversation = conversation;
+                this.conversationsService.getConversationUser(this.activeConversation.usersIds).subscribe(
+                    (user) => {
+                        this.conversationUsers.push(user);
+                    }
+                );
+            }
+        );
+        this.route.params.subscribe(
+            (param: Params) => {
+                this.conversationsService.getSingleConversation(param['id']).subscribe(
+                    (conversation) => {
+                        this.activeConversation = conversation;
+                        this.conversationsService.getConversationUser(this.activeConversation.usersIds).subscribe(
+                            (user) => {
+                                this.conversationUsers.push(user);
+                            }
+                        );
+                    }
+                );
+            }
+        );
     }
 
 }

@@ -1,8 +1,8 @@
-<a href="#{{ conversation.id }}" class="row single-conversation align-middle" (click)="onSelectConversation()">
+<a [routerLink]="['/conversations', conversation._id]" routerLinkActive="active" class="row single-conversation align-middle">
   <div class="sm-2">
     <div class="conversation-image" [ngStyle]="{'background-image': 'url(' + conversation.imagePath + ')'}"></div>
   </div>
-  <div class="sm-8 columns conversation-data">
+  <div class="sm-10 columns conversation-data">
     <h3>{{ conversation.name }}</h3>
     <p *ngIf="lastMessage !== null">{{ lastMessage.authorName }}: {{ lastMessage.content }}</p>
   </div>
