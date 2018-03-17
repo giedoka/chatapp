@@ -1,26 +1,25 @@
 import { Component, OnInit } from '@angular/core';
+import { UsersService } from '../../shared/users.service';
 import { Conversation } from '../../shared/conversation.model';
 import { ActivatedRoute, Params } from '@angular/router';
-import { ConversationsService } from '../../shared/conversations.service';
 import { User } from '../../shared/user.model';
-import { UsersService } from '../../shared/users.service';
+import { ConversationsService } from '../../shared/conversations.service';
 
 @Component({
-    selector: 'app-active-conversation',
-    templateUrl: './active-conversation.component.html',
-    styleUrls: ['./active-conversation.component.scss']
+  selector: 'app-conversation-window',
+  templateUrl: './conversation-window.component.html',
+  styleUrls: ['./conversation-window.component.scss']
 })
-export class ActiveConversationComponent implements OnInit {
-
+export class ConversationWindowComponent implements OnInit {
     activeConversation: Conversation;
     conversationUsers: User[] = [];
-    loggedUserId: string;
+    loggedUser: User;
 
     constructor(private conversationsService: ConversationsService, private route: ActivatedRoute, private usersService: UsersService) { }
 
     ngOnInit() {
         const id = this.route.snapshot.params['id'];
-        this.loggedUserId = this.usersService.loggedUser.id;
+        this.loggedUser = this.usersService.loggedUser;
         this.conversationsService.getSingleConversation(id).subscribe(
             (conversation) => {
                 this.activeConversation = conversation;

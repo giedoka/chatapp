@@ -3,7 +3,7 @@ import { Message } from './message.model';
 export class Conversation {
 
     constructor(
-        public _id: number,
+        public _id: string,
         public name: string,
         public imagePath: string,
         public usersCount: number,

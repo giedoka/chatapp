@@ -1,5 +1,5 @@
-@import '../../../../sass/variables';
-@import '../../../../sass/utilities/module';
+@import '../../../../../sass/variables';
+@import '../../../../../sass/utilities/module';
 
 .single-conversation {
   color: #999fa9;
@@ -26,9 +26,23 @@
   .conversation-image {
     height: 40px;
     width: 40px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
     border-radius: 50%;
+    overflow: hidden;
+    span {
+      width: 100%;
+      height: 100%;
+      &.img {
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+      }
+      &.initials {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $color-blue;
+        color: $color-white;
+      }
+    }
   }
 }

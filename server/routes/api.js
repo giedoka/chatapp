@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const Conversation = require('../models/conversation');
 const User = require('../models/user');
 const util = require('util'); //for objects logs
 
+const Conversation = require('../models/conversation');
 const dbUrl = 'mongodb://localhost:27017/chatapp';
 mongoose.Promise = global.Promise
 mongoose.connect(dbUrl, (err) => {
+
    if (err) {
       console.log('Error! ', err);
    }
@@ -34,6 +35,46 @@ router.get('/conversations/:id', (req, res) => {
     });
 });
 
+router.patch('/conversations/:id/send-message', (req, res) => {
+    const message = {
+        authorId: req.body.authorId,
+        authorFirstName: req.body.authorFirstName,
+        authorLastName: req.body.authorLastName,
+        content: req.body.content,
+        date: new Date(),
+        status: 'sent',
+    };
+    Conversation.findByIdAndUpdate(
+        req.params.id,
+        {$push: {messages: message}},
+        {safe: true, upsert: true},
+        function(err, result) {
+            if (err) {
+                return res.status(500).json({
+                    title: 'An error occured',
+                    error: err
+                });
+            }
+            res.status(201).json({
+                message: 'Saved message to conversation' + req.body.conversationId,
+                obj: result
+            });
+        }
+    );
+    // Conversation.save(function(err, result) {
+    //     if (err) {
+    //         return res.status(500).json({
+    //             title: 'An error occured',
+    //             error: err
+    //         });
+    //     }
+    //     res.status(201).json({
+    //         message: 'Saved message',
+    //         obj: result
+    //     });
+    // });
+});
+
 router.get('/users', (req, res) => {
     console.log('Get request for all users');
     User.find({}).exec((err, users) => {
@@ -54,7 +95,5 @@ router.get('/users/:id', (req, res) => {
         }
     });
 });
-
-router.get
 
 module.exports = router;

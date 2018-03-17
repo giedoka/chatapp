@@ -1,0 +1,10 @@
+<div class="row" *ngIf="activeConversation">
+  <div class="sm-12">
+    <div class="active-conversation">
+      <app-active-conversation [conversation]="activeConversation"></app-active-conversation>
+    </div>
+    <div class="message-box">
+      <app-message-input [activeConversation]="activeConversation"></app-message-input>
+    </div>
+  </div>
+</div>

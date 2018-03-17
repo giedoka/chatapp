@@ -1,0 +1,13 @@
+<form action="/api/send-message" method="post" class="form-inline" (submit)="onMessageSent()"> <!-- ngNoForm - disables angular form -->
+  <input type="hidden" name="userName" [value]="loggedUser.name">
+  <input type="hidden" name="userId" [value]="loggedUser.id">
+  <!--<input type="hidden" name="conversationId" [value]="activeConversation._id">-->
+  <div class="input-group">
+    <fieldset class="form-control-input-wrapper">
+      <div class="fieldset-content">
+        <input type="text" name="content" placeholder="Napisz wiadomość" class="form-control" [(ngModel)]="newMessage" autocomplete="off">
+      </div>
+    </fieldset>
+    <button type="submit" class="btn btn-blue btn-without-shadow">Wyślij</button>
+  </div>
+</form>

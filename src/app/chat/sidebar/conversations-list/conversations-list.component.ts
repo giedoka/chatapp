@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from '../../shared/users.service';
-import { ConversationsService } from '../../shared/conversations.service';
+import { UsersService } from '../../../shared/users.service';
+import { ConversationsService } from '../../../shared/conversations.service';
 
 @Component({
   selector: 'app-conversations-list',
