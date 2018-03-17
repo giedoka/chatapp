@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Conversation } from './shared/conversation.model';
-import { ConversationsService } from './shared/conversations.service';
 import { UsersService } from './shared/users.service';
 
 @Component({
@@ -10,10 +8,7 @@ import { UsersService } from './shared/users.service';
 })
 export class AppComponent implements OnInit {
 
-
-
   constructor(
-      private conversationsService: ConversationsService,
       private usersService: UsersService
   ) {}
 

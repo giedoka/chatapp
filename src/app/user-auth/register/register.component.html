@@ -1,34 +1,34 @@
-<form class="register-form" id="registerForm">
+<form class="register-form" id="registerForm" action="/api/users" method="post" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div class="login-header">
     <h2>Zarejestruj się</h2>
   </div>
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input id="name" type="text" name="form[name]" placeholder="Nazwa" required class="form-control">
+      <input id="name" type="text" name="name" placeholder="Nazwa" required class="form-control" formControlName="name">
     </div>
   </fieldset>
 
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input id="firstName" type="text" name="form[firstName]" placeholder="Imię" required class="form-control">
+      <input id="firstName" type="text" name="firstName" placeholder="Imię" required class="form-control" formControlName="firstName">
     </div>
   </fieldset>
 
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input id="lastName" type="text" name="form[lastName]" placeholder="Nazwisko" required class="form-control">
+      <input id="lastName" type="text" name="lastName" placeholder="Nazwisko" required class="form-control" formControlName="lastName">
     </div>
   </fieldset>
 
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input type="email" name="form[email]" placeholder="E-mail" required class="form-control">
+      <input type="email" name="email" placeholder="E-mail" required class="form-control" formControlName="email">
     </div>
   </fieldset>
 
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input type="password" name="form[password]" minlength="8" placeholder="Hasło" required class="form-control">
+      <input type="password" name="password" minlength="8" placeholder="Hasło" required class="form-control" formControlName="password">
     </div>
   </fieldset>
   <button type="submit" class="btn btn-large btn-purple btn-block">

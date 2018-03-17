@@ -3,6 +3,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const util = require('util'); //for objects logs
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const Conversation = require('../models/conversation');
 const dbUrl = 'mongodb://localhost:27017/chatapp';
@@ -73,6 +75,58 @@ router.patch('/conversations/:id/send-message', (req, res) => {
     //         obj: result
     //     });
     // });
+});
+
+router.post('/users', (req, res) => {
+    const user = new User({
+        email: req.body.email,
+        password: bcrypt.hashSync(req.body.password, 10),
+        name: req.body.name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        conversationsIds: []
+    });
+    user.save((err, result) => {
+        if (err) {
+            return res.status(500).json({
+                title: 'An error occured',
+                error: err
+            });
+        }
+        res.status(201).json({
+            message: 'User created',
+            obj: result
+        });
+    });
+});
+
+router.post('/users/signin', (req, res) => {
+    User.findOne({email: req.body.email}, (err, user) => {
+       if(err) {
+           return res.status(500).json({
+               title: 'An error occured',
+               error: err
+           });
+       }
+       if(!user) {
+           return res.status(401).json({
+              title: 'Login failed',
+              error: {message: 'Invalid login data'}
+           });
+       }
+       if(!bcrypt.compareSync(req.body.password, user.password)) {
+           return res.status(401).json({
+               title: 'Login failed',
+               error: {message: 'Invalid login data'}
+           });
+       }
+       const token = jwt.sign({user: user}, 'secret', {expiresIn: 7200});
+       res.status(200).json({
+           message: 'Successfully logged in',
+           token: token,
+           userId: user._id
+       });
+    });
 });
 
 router.get('/users', (req, res) => {

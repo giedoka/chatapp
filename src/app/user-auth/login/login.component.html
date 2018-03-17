@@ -1,16 +1,17 @@
-<form class="login-form" id="loginForm">
+<form class="signin-form" id="signinForm" action="/api/users/signin" method="post" [formGroup]="signinForm" (ngSubmit)="onSubmit()">
   <div class="login-header">
-    <h2>Zaloguj się</h2>
+    <h2>Logowanie</h2>
   </div>
+
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input id="name" type="text" name="form[name]" placeholder="Nazwa" required class="form-control">
+      <input type="email" name="email" placeholder="E-mail" required class="form-control" formControlName="email">
     </div>
   </fieldset>
 
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input type="password" name="form[password]" minlength="8" placeholder="Hasło" required class="form-control">
+      <input type="password" name="password" minlength="8" placeholder="Hasło" required class="form-control" formControlName="password">
     </div>
   </fieldset>
   <button type="submit" class="btn btn-large btn-purple btn-block">

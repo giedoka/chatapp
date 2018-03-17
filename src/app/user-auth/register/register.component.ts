@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { UsersService } from '../../shared/users.service';
+import { User } from '../../shared/user.model';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -7,9 +10,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterComponent implements OnInit {
 
-  constructor() { }
+  registerForm: FormGroup;
+
+  constructor(private usersService: UsersService) { }
 
   ngOnInit() {
+    this.registerForm = new FormGroup({
+        name: new FormControl(null, Validators.required),
+        firstName: new FormControl(null, Validators.required),
+        lastName: new FormControl(null, Validators.required),
+        email: new FormControl(null, [
+            Validators.required,
+            Validators.pattern("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?")
+        ]),
+        password: new FormControl(null, Validators.required)
+    });
+
+  }
+
+  onSubmit() {
+    const user = new User(
+        this.registerForm.value.email,
+        this.registerForm.value.password,
+        this.registerForm.value.name,
+        this.registerForm.value.firstName,
+        this.registerForm.value.lastName
+    );
+      console.log(this.registerForm);
+    this.usersService.signUp(user).subscribe(
+        data => console.log(data)
+    );
+    this.registerForm.reset();
   }
 
 }

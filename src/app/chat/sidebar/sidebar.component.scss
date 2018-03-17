@@ -1,0 +1,10 @@
+@import '../../../sass/utilities/unit';
+@import '../../../sass/variables';
+
+.btn.logout-btn {
+  margin-bottom: 10px;
+  background: transparent;
+  color: $color-white;
+  padding: 0;
+  font-weight: normal;
+}
