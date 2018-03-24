@@ -5,57 +5,68 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as _ from 'lodash';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 import { Message } from './message.model';
 import { Observable } from 'rxjs/Observable';
 import { User } from './user.model';
 
 @Injectable()
 export class ConversationsService {
-  private conversations: Conversation[];
-  private conversation: Conversation;
-  selectedConversation = new EventEmitter<Conversation>();
+    private conversations: Conversation[];
+    private conversation: Conversation;
+    selectedConversation = new EventEmitter<Conversation>();
 
-  constructor(
-      private usersService: UsersService,
-      private http: HttpClient) {}
+    constructor(private usersService: UsersService,
+                private http: HttpClient) {
+    }
 
-  getConversations() {
-    return this.http.get<Conversation[]>('/api/conversations')
-        .map((response) => {
-            this.conversations = response;
-            return this.conversations;
-        }
-    );
-  }
-  getSingleConversation(id) {
-      return this.http.get<Conversation>('/api/conversations/' + id)
-          .map((response) => {
-              this.conversation = response;
-              return this.conversation;
-          })
-          .catch((error: Response) => Observable.throw(error.json()));
-  }
-  getConversationUser(id) {
-    return this.http.get<User>('/api/users/' + id);
-  }
-  sendMessage(message: Message, conversationId: string) {
-      const headers = new HttpHeaders({'Content-Type': 'application/json'});
-      return this.http.patch<Message>(
-          '/api/conversations/' + conversationId + '/send-message', JSON.stringify(message), { headers: headers }).map(
-          (response) => {
-              this.conversation.messages.push(message);
-              console.log(message);
-          }
-      );
-  }
+    getConversations() {
+        const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        return this.http.get<Conversation[]>(`/api/conversations${token}`)
+            .map((response) => {
+                    this.conversations = response;
+                    return this.conversations;
+                }
+            );
+    }
 
-  sortByDate() {
-     /*this.usersService.loggedUser.conversations = _.orderBy(
-         this.usersService.loggedUser.conversations,
-         function(e) {
-           return e.messages[e.messages.length - 1].date;
-           },
-         ['desc']
-     );*/
-  }
+    getSingleConversation(id) {
+        const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        return this.http.get<Conversation>(`/api/conversations/${id}${token}`)
+            .map(response => this.conversation = response)
+            .catch((error: Response) => Observable.throw(error));
+    }
+
+    createConversations(receiverId) {
+        const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        const headers = new HttpHeaders({'Content-Type': 'application/json'});
+        return this.http.post<Conversation>(
+            `/api/conversations/create-conversation${token}`, {receiverId: receiverId}, {headers: headers}).map(response => response);
+    }
+
+    getConversationUser(id) {
+        return this.http.get<User>('/api/users/' + id);
+    }
+
+    sendMessage(message: Message, conversationId: string) {
+        const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        const headers = new HttpHeaders({'Content-Type': 'application/json'});
+        return this.http.patch<Message>(
+            `/api/conversations/${conversationId}/send-message${token}`, JSON.stringify(message), {headers: headers}).map(
+            (response) => {
+                this.conversation.messages.push(message);
+                console.log(message);
+            }
+        );
+    }
+
+    sortByDate() {
+        /*this.usersService.loggedUser.conversations = _.orderBy(
+            this.usersService.loggedUser.conversations,
+            function(e) {
+              return e.messages[e.messages.length - 1].date;
+              },
+            ['desc']
+        );*/
+    }
 }

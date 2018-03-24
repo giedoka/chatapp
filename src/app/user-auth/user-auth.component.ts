@@ -1,21 +1,22 @@
-import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { UsersService } from '../shared/users.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-user-auth',
-  templateUrl: './user-auth.component.html',
-  styleUrls: ['./user-auth.component.scss']
+    selector: 'app-user-auth',
+    templateUrl: './user-auth.component.html',
+    styleUrls: ['./user-auth.component.scss']
 })
-export class UserAuthComponent implements OnInit, OnDestroy {
+export class UserAuthComponent implements OnInit {
 
-    constructor(private renderer: Renderer2) {
-        this.renderer.addClass(document.body, 'center-content');
+    constructor(private usersService: UsersService,
+                private route: Router) {
     }
 
-  ngOnInit() {
-  }
-
-  ngOnDestroy() {
-      this.renderer.removeClass(document.body, 'center-content');
-  }
+    ngOnInit() {
+        if (this.usersService.isLoggedIn()) {
+            this.route.navigate(['/conversations']);
+        }
+    }
 
 }

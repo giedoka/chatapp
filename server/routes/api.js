@@ -16,67 +16,6 @@ mongoose.connect(dbUrl, (err) => {
    }
 });
 
-router.get('/conversations', (req, res) => {
-   console.log('Get request for all conversations');
-   Conversation.find({}).exec((err, conversations) => {
-      if (err) {
-          console.log('Error retrieving conversations!');
-      } else {
-         res.json(conversations);
-      }
-   });
-});
-
-router.get('/conversations/:id', (req, res) => {
-    Conversation.findById(req.params.id).exec((err, conversation) => {
-        if (err) {
-            console.log('Error retrieving this conversation! (id: ' + req.params.id + ')');
-        } else {
-            res.json(conversation);
-        }
-    });
-});
-
-router.patch('/conversations/:id/send-message', (req, res) => {
-    const message = {
-        authorId: req.body.authorId,
-        authorFirstName: req.body.authorFirstName,
-        authorLastName: req.body.authorLastName,
-        content: req.body.content,
-        date: new Date(),
-        status: 'sent',
-    };
-    Conversation.findByIdAndUpdate(
-        req.params.id,
-        {$push: {messages: message}},
-        {safe: true, upsert: true},
-        function(err, result) {
-            if (err) {
-                return res.status(500).json({
-                    title: 'An error occured',
-                    error: err
-                });
-            }
-            res.status(201).json({
-                message: 'Saved message to conversation' + req.body.conversationId,
-                obj: result
-            });
-        }
-    );
-    // Conversation.save(function(err, result) {
-    //     if (err) {
-    //         return res.status(500).json({
-    //             title: 'An error occured',
-    //             error: err
-    //         });
-    //     }
-    //     res.status(201).json({
-    //         message: 'Saved message',
-    //         obj: result
-    //     });
-    // });
-});
-
 router.post('/users', (req, res) => {
     const user = new User({
         email: req.body.email,
@@ -102,42 +41,52 @@ router.post('/users', (req, res) => {
 
 router.post('/users/signin', (req, res) => {
     User.findOne({email: req.body.email}, (err, user) => {
-       if(err) {
-           return res.status(500).json({
-               title: 'An error occured',
-               error: err
-           });
-       }
-       if(!user) {
-           return res.status(401).json({
-              title: 'Login failed',
-              error: {message: 'Invalid login data'}
-           });
-       }
-       if(!bcrypt.compareSync(req.body.password, user.password)) {
-           return res.status(401).json({
-               title: 'Login failed',
-               error: {message: 'Invalid login data'}
-           });
-       }
-       const token = jwt.sign({user: user}, 'secret', {expiresIn: 7200});
-       res.status(200).json({
-           message: 'Successfully logged in',
-           token: token,
-           userId: user._id
-       });
+        if(err) {
+            return res.status(500).json({
+                title: 'An error occured',
+                error: err
+            });
+        }
+        if(!user) {
+            return res.status(401).json({
+                title: 'Login failed',
+                error: {message: 'Invalid login data'}
+            });
+        }
+        if(!bcrypt.compareSync(req.body.password, user.password)) {
+            return res.status(401).json({
+                title: 'Login failed',
+                error: {message: 'Invalid login data'}
+            });
+        }
+        const token = jwt.sign({user: user}, 'secret', {expiresIn: 7200});
+        res.status(200).json({
+            message: 'Successfully logged in',
+            token: token,
+            userId: user._id
+        });
     });
 });
 
 router.get('/users', (req, res) => {
-    console.log('Get request for all users');
-    User.find({}).exec((err, users) => {
-        if (err) {
-            console.log('Error retrieving users!');
-        } else {
-            res.json(users);
-        }
-    });
+    if (req.query.search) {
+        const query = {$or: [{name: {$regex: req.query.search, $options: 'i'}}, {firstName: {$regex: req.query.search, $options: 'i'}}, {lastName: {$regex: req.query.search, $options: 'i'}}]};
+        User.find(query).exec((err, users) => {
+            if (err) {
+                console.log('Error retrieving users!');
+            } else {
+                res.json(users);
+            }
+        });
+    } else {
+        User.find({}).exec((err, users) => {
+            if (err) {
+                console.log('Error retrieving users!');
+            } else {
+                res.json(users);
+            }
+        });
+    }
 });
 
 router.get('/users/:id', (req, res) => {
@@ -147,6 +96,126 @@ router.get('/users/:id', (req, res) => {
         } else {
             res.json(user);
         }
+    });
+});
+
+router.use('/conversations', (req, res, next) => {
+    jwt.verify(req.query.token, 'secret', (err, decoded) => {
+        if (err) {
+            return res.status(401).json({
+               title: 'Not authenticated',
+               error: err
+            });
+        }
+        next();
+    });
+});
+
+router.get('/conversations', (req, res) => {
+   console.log('Get request for all conversations');
+   const decode = jwt.decode(req.query.token);
+    Conversation.find({'_id': { $in: decode.user.conversationsIds}}).exec((err, conversations) => {
+      if (err) {
+          console.log('Error retrieving conversations!');
+      } else {
+         res.json(conversations);
+      }
+   });
+});
+
+router.get('/conversations/:id', (req, res) => {
+    const decode = jwt.decode(req.query.token);
+    Conversation.findById(req.params.id).exec((err, conversation) => {
+        if (err) {
+            console.log('Error retrieving this conversation! (id: ' + req.params.id + ')');
+        } else {
+            if (decode.user.conversationsIds.indexOf(conversation._id.toString()) < 0) {
+                return res.status(401).json({
+                    title: 'Not authenticated',
+                    error: 'Conversation does not belong to this user'
+                });
+            }
+            res.json(conversation);
+        }
+    });
+});
+
+router.patch('/users/add-conversation', (req, res) => {
+    const decode = jwt.decode(req.query.token);
+    User.update(
+        {_id: {$in: [decode.user._id, req.body.receiverId]}},
+        {$push: {conversationsIds: req.query.conversationId}},
+        {"multi": true},
+        (err, result) => {
+            if (err) {
+                return res.status(500).json({
+                    title: 'An error occured',
+                    error: err
+                });
+            }
+            res.status(201).json({
+                message: 'Conversation ID saved to users',
+                obj: result
+            });
+        });
+});
+
+router.post('/conversations/create-conversation', (req, res) => {
+    const decode = jwt.decode(req.query.token);
+    const conversation = new Conversation({
+        usersCount: 2,
+        usersIds: [decode.user._id, req.body.receiverId],
+        messages: []
+    });
+
+    conversation.save((err, result) => {
+        if (err) {
+            return res.status(500).json({
+                title: 'An error occured',
+                error: err
+            });
+        }
+        res.status(201).json({
+            message: 'Conversation created',
+            obj: result
+        });
+    });
+});
+
+router.patch('/conversations/:id/send-message', (req, res) => {
+    const decode = jwt.decode(req.query.token);
+    User.findById(decode.user._id, (err, user) => {
+        if (err) {
+            return res.status(500).json({
+                title: 'An error occured',
+                error: err
+            });
+        }
+        const message = {
+            authorId: user._id,
+            authorFirstName: req.body.authorFirstName,
+            authorLastName: req.body.authorLastName,
+            content: req.body.content,
+            date: new Date(),
+            status: 'sent',
+        };
+        Conversation.findByIdAndUpdate(
+            req.params.id,
+            {$push: {messages: message}},
+            {safe: true, upsert: true},
+            function(err, result) {
+                if (err) {
+                    return res.status(500).json({
+                        title: 'An error occured',
+                        error: err
+                    });
+                }
+                res.status(201).json({
+                    message: 'Saved message to conversation' + req.body.conversationId,
+                    obj: result
+                });
+            }
+        );
     });
 });
 

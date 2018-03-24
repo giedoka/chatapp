@@ -14,6 +14,10 @@ export class ConversationsListComponent implements OnInit {
   constructor(private conversationsService: ConversationsService) { }
 
   ngOnInit() {
-    this.conversationsService.getConversations().subscribe(conversations => this.conversations = conversations);
+    this.conversationsService.getConversations()
+        .subscribe(conversations => {
+            console.log(conversations);
+            return this.conversations = conversations;
+        });
   }
 }

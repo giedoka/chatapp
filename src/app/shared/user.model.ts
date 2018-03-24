@@ -6,6 +6,6 @@ export class User {
         public firstName?: string,
         public lastName?: string,
         public conversationsIds?: [string],
-        public id?: string,
+        public _id?: string,
     ) {}
 }

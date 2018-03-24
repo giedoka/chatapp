@@ -22,16 +22,18 @@ export class MessageInputComponent implements OnInit {
         private usersService: UsersService,
         private route: ActivatedRoute
     ) {
+        this.usersService.getLoggedUser().subscribe(
+            (loggedUser) => {
+                this.loggedUser = loggedUser;
+            }
+        );
     }
 
-    ngOnInit() {
-        this.loggedUser = this.usersService.loggedUser;
-        // this.activeConversation = this.conversation;
-    }
+    ngOnInit() {}
 
     onMessageSent() {
         this.conversationsService.sendMessage({
-            authorId: this.loggedUser.id,
+            authorId: this.loggedUser._id,
             authorFirstName: this.loggedUser.firstName,
             authorLastName: this.loggedUser.lastName,
             content: this.newMessage,

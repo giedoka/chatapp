@@ -19,15 +19,21 @@ export class ConversationWindowComponent implements OnInit {
 
     ngOnInit() {
         const id = this.route.snapshot.params['id'];
-        this.loggedUser = this.usersService.loggedUser;
+        this.usersService.getLoggedUser().subscribe(
+            (user: any) => {
+                this.loggedUser = user;
+            }
+        );
         this.conversationsService.getSingleConversation(id).subscribe(
             (conversation) => {
                 this.activeConversation = conversation;
-                this.conversationsService.getConversationUser(this.activeConversation.usersIds).subscribe(
-                    (user) => {
-                        this.conversationUsers.push(user);
-                    }
-                );
+                this.activeConversation.usersIds.forEach((element, index, array) => {
+                    this.usersService.getUser(element).subscribe(
+                        (user) => {
+                            this.conversationUsers.push(user);
+                        }
+                    );
+                });
             }
         );
         this.route.params.subscribe(
@@ -35,11 +41,13 @@ export class ConversationWindowComponent implements OnInit {
                 this.conversationsService.getSingleConversation(param['id']).subscribe(
                     (conversation) => {
                         this.activeConversation = conversation;
-                        this.conversationsService.getConversationUser(this.activeConversation.usersIds).subscribe(
-                            (user) => {
-                                this.conversationUsers.push(user);
-                            }
-                        );
+                        this.activeConversation.usersIds.forEach((element, index, array) => {
+                            this.usersService.getUser(element).subscribe(
+                                (user) => {
+                                    this.conversationUsers.push(user);
+                                }
+                            );
+                        });
                     }
                 );
             }

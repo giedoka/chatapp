@@ -22,17 +22,17 @@ export class ActiveConversationComponent implements OnInit {
     constructor(private usersService: UsersService, private conversationsService: ConversationsService, private route: ActivatedRoute) { }
 
     ngOnInit() {
-        this.loggedUserId = this.usersService.loggedUser.id;
-        for (let i = 0; this.conversation.usersIds.length; i++) {
-            if (this.conversation.usersIds[i] !== this.loggedUserId) {
-                this.conversationsService.getConversationUser(this.conversation.usersIds[i]).subscribe(
-                    (user) => {
-                        this.receiver = user;
+        this.usersService.getLoggedUser().subscribe(
+            (user: any) => {
+                this.loggedUserId = user._id;
+                const receiverId = this.conversation.usersIds.filter((value) => value !== this.loggedUserId);
+                this.usersService.getUser(receiverId[0]).subscribe(
+                    (receiver) => {
+                        this.receiver = receiver;
                     }
                 );
-                break;
             }
-        }
+        );
     }
 
 }

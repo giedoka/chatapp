@@ -33,14 +33,13 @@ export class LoginComponent implements OnInit {
           this.signinForm.value.password
       )
         this.usersService.signIn(user).subscribe(
-            data => {
+            (data: any) => {
                 console.log(data);
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('userId', data.userId);
                 this.router.navigateByUrl('/');
             }
         );
-        this.signinForm.reset();
     }
 
 }
