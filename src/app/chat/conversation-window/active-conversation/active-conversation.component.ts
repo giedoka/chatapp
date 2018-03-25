@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Conversation } from '../../../shared/conversation.model';
 import { UsersService } from '../../../shared/users.service';
 import { ConversationsService } from '../../../shared/conversations.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { User } from '../../../shared/user.model';
 
 @Component({
@@ -29,6 +29,22 @@ export class ActiveConversationComponent implements OnInit {
                 this.usersService.getUser(receiverId[0]).subscribe(
                     (receiver) => {
                         this.receiver = receiver;
+                    }
+                );
+            }
+        );
+
+        this.route.params.subscribe(
+            (param: Params) => {
+                this.usersService.getLoggedUser().subscribe(
+                    (user: any) => {
+                        this.loggedUserId = user._id;
+                        const receiverId = this.conversation.usersIds.filter((value) => value !== this.loggedUserId);
+                        this.usersService.getUser(receiverId[0]).subscribe(
+                            (receiver) => {
+                                this.receiver = receiver;
+                            }
+                        );
                     }
                 );
             }
