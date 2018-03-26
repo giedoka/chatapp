@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { User } from '../../shared/user.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConversationsService } from '../../shared/conversations.service';
+import { Conversation } from '../../shared/conversation.model';
 
 @Component({
     selector: 'app-sidebar',
@@ -16,6 +17,7 @@ export class SidebarComponent implements OnInit {
     users: User[] = [];
     createConversationForm: FormGroup;
     receiverId = '';
+    conversations: Conversation[] = [];
 
     constructor(
         private usersService: UsersService,
@@ -27,6 +29,10 @@ export class SidebarComponent implements OnInit {
         this.createConversationForm = new FormGroup({
             receiverId: new FormControl(null, Validators.required)
         });
+        this.conversationsService.getConversations()
+            .subscribe(conversations => {
+                return this.conversations = conversations;
+            });
     }
 
     onLogout() {
@@ -57,6 +63,11 @@ export class SidebarComponent implements OnInit {
                 this.usersService.addConversation(response['obj']._id, this.createConversationForm.value.receiverId).subscribe(
                     (res) => {
                         console.log(res);
+                        this.conversationsService.getConversations()
+                            .subscribe(conversations => {
+                                console.log(conversations);
+                                return this.conversations = conversations;
+                            });
                     }
                 );
             }

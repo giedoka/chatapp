@@ -15,6 +15,6 @@
         </form>
       </div>
     </div>
-    <app-conversations-list></app-conversations-list>
+    <app-conversations-list *ngIf="conversations" [conversations]="conversations"></app-conversations-list>
   </div>
 </div>

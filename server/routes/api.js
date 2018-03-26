@@ -59,7 +59,7 @@ router.post('/users/signin', (req, res) => {
                 error: {message: 'Invalid login data'}
             });
         }
-        const token = jwt.sign({user: user}, 'secret', {expiresIn: 7200});
+        const token = jwt.sign({userId: user._id}, 'secret', {expiresIn: 7200});
         res.status(200).json({
             message: 'Successfully logged in',
             token: token,
@@ -114,96 +114,75 @@ router.use('/conversations', (req, res, next) => {
 router.get('/conversations', (req, res) => {
    console.log('Get request for all conversations');
    const decode = jwt.decode(req.query.token);
-    Conversation.find({'_id': { $in: decode.user.conversationsIds}}).exec((err, conversations) => {
-      if (err) {
-          console.log('Error retrieving conversations!');
-      } else {
-         res.json(conversations);
-      }
-   });
+    User.findById(decode.userId).exec((err, user) => {
+        if (!err) {
+            Conversation.find({'_id': { $in: user.conversationsIds}}).exec((err, conversations) => {
+                if (err) {
+                    console.log('Error retrieving conversations!');
+                } else {
+                    res.json(conversations);
+                }
+            });
+        }
+    });
 });
 
 router.get('/conversations/:id', (req, res) => {
     const decode = jwt.decode(req.query.token);
-    Conversation.findById(req.params.id).exec((err, conversation) => {
-        if (err) {
-            console.log('Error retrieving this conversation! (id: ' + req.params.id + ')');
-        } else {
-            if (decode.user.conversationsIds.indexOf(conversation._id.toString()) < 0) {
-                return res.status(401).json({
-                    title: 'Not authenticated',
-                    error: 'Conversation does not belong to this user'
-                });
-            }
-            res.json(conversation);
+    User.findById(decode.userId).exec((err, user) => {
+        if (!err) {
+            Conversation.findById(req.params.id).exec((err, conversation) => {
+                if (err) {
+                    console.log('Error retrieving this conversation! (id: ' + req.params.id + ')');
+                } else {
+                    if (user.conversationsIds.indexOf(conversation._id.toString()) < 0) {
+                        return res.status(401).json({
+                            title: 'Not authenticated',
+                            error: 'Conversation does not belong to this user'
+                        });
+                    }
+                    res.json(conversation);
+                }
+            });
         }
     });
 });
 
 router.patch('/users/add-conversation', (req, res) => {
     const decode = jwt.decode(req.query.token);
-    User.update(
-        {_id: {$in: [decode.user._id, req.body.receiverId]}},
-        {$push: {conversationsIds: req.query.conversationId}},
-        {"multi": true},
-        (err, result) => {
-            if (err) {
-                return res.status(500).json({
-                    title: 'An error occured',
-                    error: err
+    User.findById(decode.userId).exec((err, user) => {
+        if (!err) {
+            User.update(
+                {_id: {$in: [user._id, req.body.receiverId]}},
+                {$push: {conversationsIds: req.query.conversationId}},
+                {"multi": true},
+                (err, result) => {
+                    if (err) {
+                        return res.status(500).json({
+                            title: 'An error occured',
+                            error: err
+                        });
+                    }
+                    res.status(201).json({
+                        message: 'Conversation ID saved to users',
+                        obj: result
+                    });
                 });
-            }
-            res.status(201).json({
-                message: 'Conversation ID saved to users',
-                obj: result
-            });
-        });
+        }
+    });
 });
 
 router.post('/conversations/create-conversation', (req, res) => {
     const decode = jwt.decode(req.query.token);
-    const conversation = new Conversation({
-        usersCount: 2,
-        usersIds: [decode.user._id, req.body.receiverId],
-        messages: []
-    });
-
-    conversation.save((err, result) => {
-        if (err) {
-            return res.status(500).json({
-                title: 'An error occured',
-                error: err
+    User.findById(decode.userId).exec((err, user) => {
+        if (!err) {
+            const conversation = new Conversation({
+                usersCount: 2,
+                usersIds: [user._id, req.body.receiverId],
+                messages: []
             });
-        }
-        res.status(201).json({
-            message: 'Conversation created',
-            obj: result
-        });
-    });
-});
 
-router.patch('/conversations/:id/send-message', (req, res) => {
-    const decode = jwt.decode(req.query.token);
-    User.findById(decode.user._id, (err, user) => {
-        if (err) {
-            return res.status(500).json({
-                title: 'An error occured',
-                error: err
-            });
-        }
-        const message = {
-            authorId: user._id,
-            authorFirstName: req.body.authorFirstName,
-            authorLastName: req.body.authorLastName,
-            content: req.body.content,
-            date: new Date(),
-            status: 'sent',
-        };
-        Conversation.findByIdAndUpdate(
-            req.params.id,
-            {$push: {messages: message}},
-            {safe: true, upsert: true},
-            function(err, result) {
+            conversation.save((err, result) => {
                 if (err) {
                     return res.status(500).json({
                         title: 'An error occured',
@@ -211,11 +190,52 @@ router.patch('/conversations/:id/send-message', (req, res) => {
                     });
                 }
                 res.status(201).json({
-                    message: 'Saved message to conversation' + req.body.conversationId,
+                    message: 'Conversation created',
                     obj: result
                 });
-            }
-        );
+            });
+        }
+    });
+});
+
+router.patch('/conversations/:id/send-message', (req, res) => {
+    const decode = jwt.decode(req.query.token);
+    User.findById(decode.userId).exec((err, user) => {
+        if (!err) {
+            User.findById(user._id, (err, user) => {
+                if (err) {
+                    return res.status(500).json({
+                        title: 'An error occured',
+                        error: err
+                    });
+                }
+                const message = {
+                    authorId: user._id,
+                    authorFirstName: req.body.authorFirstName,
+                    authorLastName: req.body.authorLastName,
+                    content: req.body.content,
+                    date: new Date(),
+                    status: 'sent',
+                };
+                Conversation.findByIdAndUpdate(
+                    req.params.id,
+                    {$push: {messages: message}},
+                    {safe: true, upsert: true},
+                    function (err, result) {
+                        if (err) {
+                            return res.status(500).json({
+                                title: 'An error occured',
+                                error: err
+                            });
+                        }
+                        res.status(201).json({
+                            message: 'Saved message to conversation' + req.body.conversationId,
+                            obj: result
+                        });
+                    }
+                );
+            });
+        }
     });
 });
 
