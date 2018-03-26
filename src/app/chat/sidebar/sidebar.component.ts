@@ -44,7 +44,11 @@ export class SidebarComponent implements OnInit {
         if (e.target.value.length > 2) {
             this.usersService.getUsersByQuery(e.target.value).subscribe(
                 (response: any) => {
-                    this.users = response;
+                    this.usersService.getLoggedUser().subscribe(
+                        (user: User) => {
+                            this.users = response.filter((usr: User) => usr._id !== user._id);
+                        }
+                    );
                 }
             );
         } else {
@@ -59,13 +63,10 @@ export class SidebarComponent implements OnInit {
     onAddConversation() {
         this.conversationsService.createConversations(this.createConversationForm.value.receiverId).subscribe(
             (response) => {
-                console.log(response);
                 this.usersService.addConversation(response['obj']._id, this.createConversationForm.value.receiverId).subscribe(
                     (res) => {
-                        console.log(res);
                         this.conversationsService.getConversations()
                             .subscribe(conversations => {
-                                console.log(conversations);
                                 return this.conversations = conversations;
                             });
                     }
