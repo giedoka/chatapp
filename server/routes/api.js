@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const Conversation = require('../models/conversation');
-const dbUrl = 'mongodb://localhost:27017/chatapp';
+const dbUrl = 'mongodb://127.0.0.1:80/chatapp';
 mongoose.Promise = global.Promise
 mongoose.connect(dbUrl, (err) => {
 
