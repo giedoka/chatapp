@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 
 const Conversation = require('../models/conversation');
 // const dbUrl = 'mongodb://127.0.0.1:27017/chatapp';
-const dbUrl = 'mongodb://ec2-35-180-63-244.eu-west-3.compute.amazonaws.com:27017/chatapp';
+const dbUrl = 'mongodb://bitnami@ec2-35-180-63-244.eu-west-3.compute.amazonaws.com:27017/chatapp';
 
 mongoose.Promise = global.Promise
 mongoose.connect(dbUrl, (err) => {
