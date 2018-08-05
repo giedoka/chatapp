@@ -14,7 +14,8 @@
       <input type="password" name="password" minlength="8" placeholder="Hasło" required class="form-control" formControlName="password">
     </div>
   </fieldset>
-  <button type="submit" class="btn btn-large btn-purple btn-block">
+  <button type="submit" class="btn btn-large btn-purple btn-block btn-submit">
     Zaloguj
   </button>
+  <a [routerLink]="['/auth/register']" class="form-link">Nie mam konta</a>
 </form>

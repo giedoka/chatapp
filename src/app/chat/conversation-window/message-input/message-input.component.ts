@@ -39,6 +39,7 @@ export class MessageInputComponent implements OnInit {
             content: this.newMessage,
             date: new Date(),
             status: 'read',
+            conversationId: this.activeConversation._id
         }, this.activeConversation._id).subscribe(
             (data) => {
                 console.log(data); // TODO: check why data is undefined

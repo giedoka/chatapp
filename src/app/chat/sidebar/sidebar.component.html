@@ -1,9 +1,18 @@
 <div class="row">
   <div class="sm-12 columns">
     <div class="sm-12 columns align-right">
-      <button type="button" (click)="showAddConversationForm = !showAddConversationForm" class="btn btn-without-shadow add-conversation-btn">Add</button>
-      <button type="button" (click)="onLogout()" class="btn btn-without-shadow logout-btn">Logout</button>
-      <div class="users-search" *ngIf="showAddConversationForm">
+      <header class="user-header" *ngIf="loggedUser">
+        <div class="user-info">
+          <span class="user-name">{{ loggedUser.firstName }} {{ loggedUser.lastName }}</span>
+          <div class="user-actions">
+            <a href="" class="user-settings-btn"><i class="icon-tools"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i></a>
+            <a (click)="onLogout()" class="logout-btn"><i class="icon icon-logout"></i></a>
+          </div>
+        </div>
+      </header>
+      <!--<a (click)="showAddConversationForm = !showAddConversationForm" class="add-conversation-btn"><i class="icon icon-search"></i></a>-->
+      <!--<div class="users-search" *ngIf="showAddConversationForm">-->
+        <div class="users-search">
         <form [formGroup]="createConversationForm" (ngSubmit)="onAddConversation()">
           <input type="hidden" name="receiverId" id="receiverId" formControlName="receiverId">
           <input type="text" placeholder="Search" (keyup)="findUsers($event)">

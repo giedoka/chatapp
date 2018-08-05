@@ -31,6 +31,10 @@
   }
 }
 
+.btn-submit {
+	margin-top: rem-calc(20);
+}
+
 .btn-blue {
 	@include button-variant(
 		$color-white,

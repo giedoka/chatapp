@@ -13,6 +13,7 @@ const conversationSchema = new Schema({
         content: String,
         date: Date,
         status: String,
+        conversationId: String
     }]
 });
 

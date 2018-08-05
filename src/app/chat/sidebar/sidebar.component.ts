@@ -18,6 +18,7 @@ export class SidebarComponent implements OnInit {
     createConversationForm: FormGroup;
     receiverId = '';
     conversations: Conversation[] = [];
+    loggedUser: User;
 
     constructor(
         private usersService: UsersService,
@@ -33,6 +34,9 @@ export class SidebarComponent implements OnInit {
             .subscribe(conversations => {
                 return this.conversations = conversations;
             });
+        this.usersService.getLoggedUser().subscribe((user) => {
+            this.loggedUser = user;
+        });
     }
 
     onLogout() {
@@ -61,18 +65,31 @@ export class SidebarComponent implements OnInit {
     }
 
     onAddConversation() {
-        this.conversationsService.createConversations(this.createConversationForm.value.receiverId).subscribe(
-            (response) => {
-                this.usersService.addConversation(response['obj']._id, this.createConversationForm.value.receiverId).subscribe(
-                    (res) => {
-                        this.conversationsService.getConversations()
-                            .subscribe(conversations => {
-                                return this.conversations = conversations;
-                            });
-                    }
-                );
+        let conversationId = null;
+        for (let i = 0; i < this.conversations.length; i++) {
+            if (this.conversations[i].usersIds.indexOf(this.createConversationForm.value.receiverId) > -1) {
+                conversationId = this.conversations[i]._id;
+                break;
             }
-        );
+        }
+        if (!conversationId) {
+            this.conversationsService.createConversations(this.createConversationForm.value.receiverId).subscribe(
+                (response) => {
+                    this.usersService.addConversation(response['obj']._id, this.createConversationForm.value.receiverId).subscribe(
+                        (res) => {
+                            this.conversationsService.getConversations()
+                                .subscribe(conversations => {
+                                    return this.conversations = conversations;
+                                });
+                            this.route.navigate(['/conversations', response['obj']._id]);
+                        }
+                    );
+                }
+            );
+        } else {
+            this.route.navigate(['/conversations', conversationId]);
+        }
+        this.users = [];
     }
 
 }

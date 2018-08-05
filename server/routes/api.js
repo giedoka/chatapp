@@ -7,7 +7,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const Conversation = require('../models/conversation');
-const dbUrl = 'mongodb://104.197.115.69:27017/chatapp';
+const dbUrl = 'mongodb://127.0.0.1:27017/chatapp';
+
 mongoose.Promise = global.Promise
 mongoose.connect(dbUrl, (err) => {
 
@@ -216,6 +217,7 @@ router.patch('/conversations/:id/send-message', (req, res) => {
                     content: req.body.content,
                     date: new Date(),
                     status: 'sent',
+                    conversationId: req.body.conversationId
                 };
                 Conversation.findByIdAndUpdate(
                     req.params.id,

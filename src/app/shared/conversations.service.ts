@@ -9,15 +9,21 @@ import 'rxjs/add/observable/throw';
 import { Message } from './message.model';
 import { Observable } from 'rxjs/Observable';
 import { User } from './user.model';
+import * as io from 'socket.io-client';
 
 @Injectable()
 export class ConversationsService {
     private conversations: Conversation[];
     private conversation: Conversation;
     selectedConversation = new EventEmitter<Conversation>();
+    socket: SocketIOClient.Socket;
 
     constructor(private usersService: UsersService,
                 private http: HttpClient) {
+        this.socket = io();
+        this.socket.on('new message', (data) => {
+            this.conversation.messages.push(data);
+        });
     }
 
     getConversations() {
@@ -32,6 +38,7 @@ export class ConversationsService {
 
     getSingleConversation(id) {
         const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        this.socket.emit('conversation', id);
         return this.http.get<Conversation>(`/api/conversations/${id}${token}`)
             .map(response => this.conversation = response)
             .catch((error: Response) => Observable.throw(error));
@@ -51,10 +58,11 @@ export class ConversationsService {
     sendMessage(message: Message, conversationId: string) {
         const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
         const headers = new HttpHeaders({'Content-Type': 'application/json'});
+        this.socket.emit('message', message);
         return this.http.patch<Message>(
             `/api/conversations/${conversationId}/send-message${token}`, JSON.stringify(message), {headers: headers}).map(
             (response) => {
-                this.conversation.messages.push(message);
+                // this.conversation.messages.push(message);
                 console.log(message);
             }
         );

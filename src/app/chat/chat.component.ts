@@ -15,6 +15,8 @@ export class ChatComponent implements OnInit {
   ngOnInit() {
       if (this.usersService.isLoggedIn()) {
           this.route.navigate(['/conversations']);
+      } else {
+          this.route.navigate(['/']);
       }
   }
 

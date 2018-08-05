@@ -34,7 +34,8 @@
     "mongodb": "^2.2.33",
     "mongoose": "^5.0.2",
     "rxjs": "^5.5.2",
-    "socket.io": "^2.0.4",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
@@ -45,6 +46,7 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/lodash": "^4.14.97",
     "@types/node": "~6.0.60",
+    "@types/socket.io-client": "^1.4.32",
     "codelyzer": "^4.0.1",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
