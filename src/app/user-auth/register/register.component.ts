@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../shared/users.service';
 import { User } from '../../shared/user.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +13,7 @@ export class RegisterComponent implements OnInit {
 
   registerForm: FormGroup;
 
-  constructor(private usersService: UsersService) { }
+  constructor(private usersService: UsersService, private route: Router) { }
 
   ngOnInit() {
     this.registerForm = new FormGroup({
@@ -36,9 +37,11 @@ export class RegisterComponent implements OnInit {
         this.registerForm.value.firstName,
         this.registerForm.value.lastName
     );
-      console.log(this.registerForm);
     this.usersService.signUp(user).subscribe(
-        data => console.log(data)
+        (data) => {
+            console.log(data);
+            this.route.navigate(['/auth', 'login']);
+        }
     );
     this.registerForm.reset();
   }

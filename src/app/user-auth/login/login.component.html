@@ -1,6 +1,7 @@
 <form class="signin-form" id="signinForm" action="/api/users/signin" method="post" [formGroup]="signinForm" (ngSubmit)="onSubmit()">
   <div class="login-header">
     <h2>Logowanie</h2>
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
   </div>
 
   <fieldset class="form-control-input-wrapper">

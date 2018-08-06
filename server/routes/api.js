@@ -8,8 +8,10 @@ const jwt = require('jsonwebtoken');
 
 const Conversation = require('../models/conversation');
 // const dbUrl = 'mongodb://127.0.0.1:27017/chatapp';
-// const dbUrl = process.env.MONGODB_URI + '/chatapp';
 const dbUrl = 'mongodb://groniu:groniu@%2Fopt%2Fbitnami%2Fmongodb%2Ftmp%2Fmongodb-27017.sock/chatapp';
+
+// const config = require('config');
+// const dbConfig = config.get('chatapp.dbConfig');
 
 mongoose.Promise = global.Promise
 mongoose.connect(dbUrl, (err) => {
@@ -31,11 +33,13 @@ router.post('/users', (req, res) => {
     user.save((err, result) => {
         if (err) {
             return res.status(500).json({
+                status: 'err',
                 title: 'An error occured',
                 error: err
             });
         }
         res.status(201).json({
+            status: 'ok',
             message: 'User created',
             obj: result
         });
@@ -46,24 +50,28 @@ router.post('/users/signin', (req, res) => {
     User.findOne({email: req.body.email}, (err, user) => {
         if(err) {
             return res.status(500).json({
+                status: 'err',
                 title: 'An error occured',
                 error: err
             });
         }
         if(!user) {
             return res.status(401).json({
+                status: 'err',
                 title: 'Login failed',
-                error: {message: 'Invalid login data'}
+                error: {message: 'Invalid credentials'}
             });
         }
         if(!bcrypt.compareSync(req.body.password, user.password)) {
             return res.status(401).json({
+                status: 'err',
                 title: 'Login failed',
-                error: {message: 'Invalid login data'}
+                error: {message: 'Invalid credentials'}
             });
         }
         const token = jwt.sign({userId: user._id}, 'secret', {expiresIn: 7200});
         res.status(200).json({
+            status: 'ok',
             message: 'Successfully logged in',
             token: token,
             userId: user._id
