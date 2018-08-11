@@ -1,0 +1,10 @@
+{
+  "chatapp": {
+    "dbConfig": {
+      "host": "groniu:groniu@%2Fopt%2Fbitnami%2Fmongodb%2Ftmp%2Fmongodb-27017.sock"
+    },
+    "credit": {
+      "initialDays": 30
+    }
+  }
+}

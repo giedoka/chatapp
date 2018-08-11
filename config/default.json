@@ -1,0 +1,14 @@
+{
+  "chatapp": {
+    "dbConfig": {
+      "host": "localhost",
+      "port": 27017,
+      "dbName": "chatapp"
+    },
+    "credit": {
+      "initialLimit": 100,
+      // Set low for development
+      "initialDays": 1
+    }
+  }
+}

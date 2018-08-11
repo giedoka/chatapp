@@ -27,9 +27,9 @@ export class SidebarComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.createConversationForm = new FormGroup({
-            receiverId: new FormControl(null, Validators.required)
-        });
+        // this.createConversationForm = new FormGroup({
+        //     receiverId: new FormControl(null, Validators.required)
+        // });
         this.conversationsService.getConversations()
             .subscribe(conversations => {
                 return this.conversations = conversations;
@@ -61,21 +61,23 @@ export class SidebarComponent implements OnInit {
     }
 
     receiverIdSelect(id) {
-        this.createConversationForm.patchValue({receiverId: id});
+        // this.createConversationForm.patchValue({receiverId: id});
     }
 
-    onAddConversation() {
+    onAddConversation(e) {
         let conversationId = null;
+        console.log(e);
+        this.receiverId = e.target.dataset.receiverId;
         for (let i = 0; i < this.conversations.length; i++) {
-            if (this.conversations[i].usersIds.indexOf(this.createConversationForm.value.receiverId) > -1) {
+            if (this.conversations[i].usersIds.indexOf(this.receiverId) > -1) {
                 conversationId = this.conversations[i]._id;
                 break;
             }
         }
         if (!conversationId) {
-            this.conversationsService.createConversations(this.createConversationForm.value.receiverId).subscribe(
+            this.conversationsService.createConversations(this.receiverId).subscribe(
                 (response) => {
-                    this.usersService.addConversation(response['obj']._id, this.createConversationForm.value.receiverId).subscribe(
+                    this.usersService.addConversation(response['obj']._id, this.receiverId).subscribe(
                         (res) => {
                             this.conversationsService.getConversations()
                                 .subscribe(conversations => {

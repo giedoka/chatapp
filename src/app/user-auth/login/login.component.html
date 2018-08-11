@@ -1,7 +1,9 @@
+<div class="notification notification-error" [ngClass]="{ 'show': errorMessage }">
+  <p>{{ errorMessage }}</p>
+</div>
 <form class="signin-form" id="signinForm" action="/api/users/signin" method="post" [formGroup]="signinForm" (ngSubmit)="onSubmit()">
   <div class="login-header">
-    <h2>Logowanie</h2>
-    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <h2>Sign in</h2>
   </div>
 
   <fieldset class="form-control-input-wrapper">
@@ -12,11 +14,11 @@
 
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input type="password" name="password" minlength="8" placeholder="Hasło" required class="form-control" formControlName="password">
+      <input type="password" name="password" minlength="8" placeholder="Password" required class="form-control" formControlName="password">
     </div>
   </fieldset>
   <button type="submit" class="btn btn-large btn-purple btn-block btn-submit">
-    Zaloguj
+    Log in
   </button>
-  <a [routerLink]="['/auth/register']" class="form-link">Nie mam konta</a>
+  <a [routerLink]="['/auth/register']" class="form-link">I don't have account</a>
 </form>

@@ -7,8 +7,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const Conversation = require('../models/conversation');
-// const dbUrl = 'mongodb://127.0.0.1:27017/chatapp';
-const dbUrl = 'mongodb://groniu:groniu@%2Fopt%2Fbitnami%2Fmongodb%2Ftmp%2Fmongodb-27017.sock/chatapp';
+const dbUrl = 'mongodb://127.0.0.1:27017/chatapp';
+// const dbUrl = 'mongodb://groniu:groniu@%2Fopt%2Fbitnami%2Fmongodb%2Ftmp%2Fmongodb-27017.sock/chatapp';
 
 // const config = require('config');
 // const dbConfig = config.get('chatapp.dbConfig');
@@ -16,9 +16,9 @@ const dbUrl = 'mongodb://groniu:groniu@%2Fopt%2Fbitnami%2Fmongodb%2Ftmp%2Fmongod
 mongoose.Promise = global.Promise
 mongoose.connect(dbUrl, (err) => {
 
-   if (err) {
-      console.log('Error! ', err);
-   }
+    if (err) {
+        console.log('Error! ', err);
+    }
 });
 
 router.post('/users', (req, res) => {
@@ -31,10 +31,17 @@ router.post('/users', (req, res) => {
         conversationsIds: []
     });
     user.save((err, result) => {
+        if (!user.email || !user.password || !user.name || !user.firstName || !user.lastName) {
+            return res.status(401).json({
+                status: 'err',
+                title: 'An error occured',
+                error: {message: 'Fill the required fields'}
+            });
+        }
         if (err) {
             return res.status(500).json({
                 status: 'err',
-                title: 'An error occured',
+                title: 'Register failed',
                 error: err
             });
         }
@@ -48,21 +55,21 @@ router.post('/users', (req, res) => {
 
 router.post('/users/signin', (req, res) => {
     User.findOne({email: req.body.email}, (err, user) => {
-        if(err) {
+        if (err) {
             return res.status(500).json({
                 status: 'err',
                 title: 'An error occured',
                 error: err
             });
         }
-        if(!user) {
+        if (!user) {
             return res.status(401).json({
                 status: 'err',
                 title: 'Login failed',
                 error: {message: 'Invalid credentials'}
             });
         }
-        if(!bcrypt.compareSync(req.body.password, user.password)) {
+        if (!bcrypt.compareSync(req.body.password, user.password)) {
             return res.status(401).json({
                 status: 'err',
                 title: 'Login failed',
@@ -81,7 +88,14 @@ router.post('/users/signin', (req, res) => {
 
 router.get('/users', (req, res) => {
     if (req.query.search) {
-        const query = {$or: [{name: {$regex: req.query.search, $options: 'i'}}, {firstName: {$regex: req.query.search, $options: 'i'}}, {lastName: {$regex: req.query.search, $options: 'i'}}]};
+        const query = {
+            $or: [{name: {$regex: req.query.search, $options: 'i'}}, {
+                firstName: {
+                    $regex: req.query.search,
+                    $options: 'i'
+                }
+            }, {lastName: {$regex: req.query.search, $options: 'i'}}]
+        };
         User.find(query).exec((err, users) => {
             if (err) {
                 console.log('Error retrieving users!');
@@ -114,8 +128,8 @@ router.use('/conversations', (req, res, next) => {
     jwt.verify(req.query.token, 'secret', (err, decoded) => {
         if (err) {
             return res.status(401).json({
-               title: 'Not authenticated',
-               error: err
+                title: 'Not authenticated',
+                error: err
             });
         }
         next();
@@ -123,11 +137,11 @@ router.use('/conversations', (req, res, next) => {
 });
 
 router.get('/conversations', (req, res) => {
-   console.log('Get request for all conversations');
-   const decode = jwt.decode(req.query.token);
+    console.log('Get request for all conversations');
+    const decode = jwt.decode(req.query.token);
     User.findById(decode.userId).exec((err, user) => {
         if (!err) {
-            Conversation.find({'_id': { $in: user.conversationsIds}}).exec((err, conversations) => {
+            Conversation.find({'_id': {$in: user.conversationsIds}}).exec((err, conversations) => {
                 if (err) {
                     console.log('Error retrieving conversations!');
                 } else {
@@ -164,9 +178,9 @@ router.patch('/users/add-conversation', (req, res) => {
     User.findById(decode.userId).exec((err, user) => {
         if (!err) {
             User.update(
-                {_id: {$in: [user._id, req.body.receiverId]}},
+                {_id: {$in: [user._id, req.query.receiverId]}},
                 {$push: {conversationsIds: req.query.conversationId}},
-                {"multi": true},
+                {'multi': true},
                 (err, result) => {
                     if (err) {
                         return res.status(500).json({

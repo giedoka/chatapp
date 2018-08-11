@@ -5,9 +5,9 @@ import { User } from '../../shared/user.model';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
@@ -15,7 +15,8 @@ export class LoginComponent implements OnInit {
     errorMessage: string;
 
     constructor(private usersService: UsersService,
-                private router: Router) { }
+                private router: Router) {
+    }
 
     ngOnInit() {
         this.signinForm = new FormGroup({
@@ -29,16 +30,26 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit() {
-      const user = new User(
-          this.signinForm.value.email,
-          this.signinForm.value.password
-      );
+        const user = new User(
+            this.signinForm.value.email,
+            this.signinForm.value.password
+        );
         this.usersService.signIn(user).subscribe(
             (data: any) => {
-                console.log(data);
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('userId', data.userId);
+                const date = new Date();
+                date.setTime(date.getTime() + (2 * 60 * 60 * 1000));
+                const expires = '; expires=' + date.toUTCString();
+                document.cookie = '_token=' + data.token + expires + '; path=/';
+                document.cookie = '_userId=' + data.userId + expires + '; path=/';
+                // localStorage.setItem('token', data.token);
+                // localStorage.setItem('userId', data.userId);
                 this.router.navigate(['/conversations']);
+            },
+            (err) => {
+                this.errorMessage = err.error.error.message;
+                setTimeout(() => {
+                   this.errorMessage = '';
+                }, 3000);
             }
         );
     }

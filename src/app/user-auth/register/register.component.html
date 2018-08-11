@@ -1,22 +1,25 @@
+<div class="notification notification-error" [ngClass]="{ 'show': errorMessage }">
+  <p>{{ errorMessage }}</p>
+</div>
 <form class="register-form" id="registerForm" action="/api/users" method="post" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
   <div class="login-header">
-    <h2>Zarejestruj się</h2>
+    <h2>Sign up</h2>
   </div>
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input id="name" type="text" name="name" placeholder="Nazwa" required class="form-control" formControlName="name">
+      <input id="name" type="text" name="name" placeholder="Username" required class="form-control" formControlName="name">
     </div>
   </fieldset>
 
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input id="firstName" type="text" name="firstName" placeholder="Imię" required class="form-control" formControlName="firstName">
+      <input id="firstName" type="text" name="firstName" placeholder="First name" required class="form-control" formControlName="firstName">
     </div>
   </fieldset>
 
   <fieldset class="form-control-input-wrapper">
     <div class="fieldset-content">
-      <input id="lastName" type="text" name="lastName" placeholder="Nazwisko" required class="form-control" formControlName="lastName">
+      <input id="lastName" type="text" name="lastName" placeholder="Last name" required class="form-control" formControlName="lastName">
     </div>
   </fieldset>
 
@@ -32,7 +35,7 @@
     </div>
   </fieldset>
   <button type="submit" class="btn btn-large btn-purple btn-block btn-submit">
-    Załóż konto
+    Register
   </button>
-  <a [routerLink]="['/auth/login']" class="form-link">Mam już konto</a>
+  <a [routerLink]="['/auth/login']" class="form-link">I already have account</a>
 </form>

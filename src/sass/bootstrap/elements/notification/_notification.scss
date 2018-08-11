@@ -1,0 +1,23 @@
+.notification {
+  padding: 10px;
+  color: $color-white;
+  position: fixed;
+  z-index: 999999;
+  width: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: .2s ease-in;
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  p {
+    margin: 0;
+    font-size: rem-calc(14);
+  }
+  &.notification-error {
+    background-color: $color-red;
+  }
+}

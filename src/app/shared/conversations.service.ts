@@ -27,7 +27,14 @@ export class ConversationsService {
     }
 
     getConversations() {
-        const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        // const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        let token = '';
+        const value = `; ${document.cookie}`;
+        const parts = value.split('; _token=');
+
+        if (parts.length === 2) {
+            token = `?token=${parts.pop().split(';').shift()}`;
+        }
         return this.http.get<Conversation[]>(`/api/conversations${token}`)
             .map((response) => {
                     this.conversations = response;
@@ -37,7 +44,14 @@ export class ConversationsService {
     }
 
     getSingleConversation(id) {
-        const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        // const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        let token = '';
+        const value = `; ${document.cookie}`;
+        const parts = value.split('; _token=');
+
+        if (parts.length === 2) {
+            token = `?token=${parts.pop().split(';').shift()}`;
+        }
         this.socket.emit('conversation', id);
         return this.http.get<Conversation>(`/api/conversations/${id}${token}`)
             .map(response => this.conversation = response)
@@ -45,7 +59,14 @@ export class ConversationsService {
     }
 
     createConversations(receiverId) {
-        const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        // const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        let token = '';
+        const value = `; ${document.cookie}`;
+        const parts = value.split('; _token=');
+
+        if (parts.length === 2) {
+            token = `?token=${parts.pop().split(';').shift()}`;
+        }
         const headers = new HttpHeaders({'Content-Type': 'application/json'});
         return this.http.post<Conversation>(
             `/api/conversations/create-conversation${token}`, {receiverId: receiverId}, {headers: headers}).map(response => response);
@@ -56,7 +77,14 @@ export class ConversationsService {
     }
 
     sendMessage(message: Message, conversationId: string) {
-        const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        // const token = localStorage.getItem('token') ? `?token=${localStorage.getItem('token')}` : '';
+        let token = '';
+        const value = `; ${document.cookie}`;
+        const parts = value.split('; _token=');
+
+        if (parts.length === 2) {
+            token = `?token=${parts.pop().split(';').shift()}`;
+        }
         const headers = new HttpHeaders({'Content-Type': 'application/json'});
         this.socket.emit('message', message);
         return this.http.patch<Message>(
