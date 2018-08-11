@@ -7,8 +7,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const Conversation = require('../models/conversation');
-const dbUrl = 'mongodb://127.0.0.1:27017/chatapp';
-// const dbUrl = 'mongodb://groniu:groniu@%2Fopt%2Fbitnami%2Fmongodb%2Ftmp%2Fmongodb-27017.sock/chatapp';
+// const dbUrl = 'mongodb://127.0.0.1:27017/chatapp';
+const dbUrl = 'mongodb://groniu:groniu@%2Fopt%2Fbitnami%2Fmongodb%2Ftmp%2Fmongodb-27017.sock/chatapp';
 
 // const config = require('config');
 // const dbConfig = config.get('chatapp.dbConfig');
