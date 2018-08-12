@@ -2,6 +2,9 @@
 @import '../../../../sass/utilities/module';
 @import '../../../../sass/bootstrap/helpers/mixins/module';
 
+.active-conversation-wrapper {
+  height: calc(100% - 90px);
+}
 .conversation-name {
   padding: rem-calc(15);
   background-color: $color-white;
@@ -14,7 +17,7 @@
 }
 .messages-list {
   @extend .clear-list;
-  height: 100%;
+  height: calc(100% - 64px);
   overflow-y: auto;
   li {
     color: $color-white;
