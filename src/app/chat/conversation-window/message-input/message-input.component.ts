@@ -32,20 +32,22 @@ export class MessageInputComponent implements OnInit {
     ngOnInit() {}
 
     onMessageSent() {
-        this.conversationsService.sendMessage({
-            authorId: this.loggedUser._id,
-            authorFirstName: this.loggedUser.firstName,
-            authorLastName: this.loggedUser.lastName,
-            content: this.newMessage,
-            date: new Date(),
-            status: 'read',
-            conversationId: this.activeConversation._id
-        }, this.activeConversation._id).subscribe(
-            (data) => {
-                console.log(data); // TODO: check why data is undefined
-                this.newMessage = '';
-            }
-        );
+        if (this.newMessage.trim() !== '') {
+            this.conversationsService.sendMessage({
+                authorId: this.loggedUser._id,
+                authorFirstName: this.loggedUser.firstName,
+                authorLastName: this.loggedUser.lastName,
+                content: this.newMessage,
+                date: new Date(),
+                status: 'read',
+                conversationId: this.activeConversation._id
+            }, this.activeConversation._id).subscribe(
+                (data) => {
+                    console.log(data); // TODO: check why data is undefined
+                    this.newMessage = '';
+                }
+            );
+        }
     }
 
 }
