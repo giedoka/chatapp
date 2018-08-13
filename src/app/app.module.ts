@@ -19,6 +19,10 @@ import { UserAuthComponent } from './user-auth/user-auth.component';
 import { LoginComponent } from './user-auth/login/login.component';
 import { RegisterComponent } from './user-auth/register/register.component';
 
+import { enableProdMode } from '@angular/core';
+
+enableProdMode();
+
 const appRoutes = [
     {
         path: '',

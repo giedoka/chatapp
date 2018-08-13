@@ -178,7 +178,7 @@ router.patch('/users/add-conversation', (req, res) => {
     User.findById(decode.userId).exec((err, user) => {
         if (!err) {
             User.update(
-                {_id: {$in: [user._id, req.query.receiverId]}},
+                {_id: {$in: [user._id, req.body.receiverId]}},
                 {$push: {conversationsIds: req.query.conversationId}},
                 {'multi': true},
                 (err, result) => {
@@ -199,6 +199,7 @@ router.patch('/users/add-conversation', (req, res) => {
 
 router.post('/conversations/create-conversation', (req, res) => {
     const decode = jwt.decode(req.query.token);
+
     User.findById(decode.userId).exec((err, user) => {
         if (!err) {
             const conversation = new Conversation({

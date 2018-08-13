@@ -35,16 +35,12 @@ export class UsersService implements OnInit {
     }
 
     getLoggedUser() {
-        let userId = '';
-        const value = `; ${document.cookie}`;
-        const parts = value.split('; _userId=');
-
-        if (parts.length === 2) {
-            userId = parts.pop().split(';').shift();
-        }
+        const userId = `${decodeURIComponent(document.cookie)
+            .split(';')
+            .filter((value) => (value.indexOf('_userId=') > -1))}`;
         /*return this.http.get<User>('/api/users/' + localStorage.getItem('userId')).map(
             (response: any) => this.loggedUser = response);*/
-        return this.http.get<User>('/api/users/' + userId).map(
+        return this.http.get<User>('/api/users/' + userId.replace('_userId=', '').trim()).map(
             (response: any) => this.loggedUser = response);
     }
 
@@ -88,22 +84,24 @@ export class UsersService implements OnInit {
     }
 
     isLoggedIn() {
-        const value = `; ${document.cookie}`;
-        const parts = value.split('; _token=');
+        const token = `${decodeURIComponent(document.cookie)
+            .split(';')
+            .filter((value) => (value.indexOf('_token=') > -1))}`;
         // return localStorage.getItem('token') !== null;
-        return parts.length === 2;
+        return token.length > 0;
     }
 
     addConversation(conversationId, receiverId) {
         // const query = localStorage.getItem('token') ? `token=${localStorage.getItem('token')}&conversationId=${conversationId}` : `conversationId=${conversationId}`;
         let query = `conversationId=${conversationId}`;
-        const value = `; ${document.cookie}`;
-        const parts = value.split('; _token=');
+        const _token = decodeURIComponent(document.cookie)
+            .split(';')
+            .filter((value) => (value.indexOf('_token') > -1));
 
-        if (parts.length === 2) {
-            query = `token=${parts.pop().split(';').shift()}&conversationId=${conversationId}`;
+        if (_token.length) {
+            query = `token=${_token}&conversationId=${conversationId}`;
         }
         const headers = new HttpHeaders({'Content-Type': 'application/json'});
-        return this.http.patch<User>(`/api/users/add-conversation?${query}`, {receiverId: receiverId}, {headers: headers}).map(response => response);
+        return this.http.patch<User>(`/api/users/add-conversation?${query.replace('_token=', '')}`, {receiverId: receiverId}, {headers: headers}).map(response => response);
     }
 }

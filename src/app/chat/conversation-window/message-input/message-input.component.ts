@@ -43,7 +43,7 @@ export class MessageInputComponent implements OnInit {
                 conversationId: this.activeConversation._id
             }, this.activeConversation._id).subscribe(
                 (data) => {
-                    console.log(data); // TODO: check why data is undefined
+                    // console.log(data); // TODO: check why data is undefined
                     this.newMessage = '';
                 }
             );
