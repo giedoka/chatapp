@@ -79,6 +79,7 @@ export class SidebarComponent implements OnInit {
                 (response) => {
                     this.usersService.addConversation(response['obj']._id, this.receiverId).subscribe(
                         (res) => {
+                            console.log(res);
                             this.conversationsService.getConversations()
                                 .subscribe(conversations => {
                                     return this.conversations = conversations;
